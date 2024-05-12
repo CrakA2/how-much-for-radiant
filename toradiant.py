@@ -3,6 +3,9 @@ import os
 import time
 import argparse
 
+
+print("Checkout the source code at:")
+print("https://github.com/CrakA2/how-much-for-radiant")
 # Create the parser
 parser = argparse.ArgumentParser(description="Process launch arguments.")
 
@@ -44,6 +47,8 @@ def fetch_radiant_mmr():
 def calculate_rr_required():
     radiantMMR = fetch_radiant_mmr()
     if radiantMMR is not None and mmr_current is not None:
+        if mmr_current < 0:
+            return "Player is not Immortal"
         rrRequired = radiantMMR - mmr_current 
         if rrRequired < 0:
             return "Player is Radiant"
@@ -55,10 +60,7 @@ def calculate_rr_required():
 
 def write_to_file(rrRequired):
     with open('/var/www/html/tr.txt', 'w') as file:
-        if isinstance(rrRequired, str):
-            file.write(rrRequired)
-        else:
-            file.write(f"{str(rrRequired)} RR Required for Radiant")
+        file.write(str(rrRequired))
 
 def main():
     while True:
