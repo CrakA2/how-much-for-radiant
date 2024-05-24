@@ -29,7 +29,8 @@ def check_and_create_file(filename):
 def fetch_and_parse_mmr():
     global mmr_current
     url = f"https://api.henrikdev.xyz/valorant/v1/by-puuid/mmr/{region}/{puuid}"
-    response = requests.get(url)
+    headers = {'Authorization': 'HDEV-2f464838-0399-4bfd-9c01-1b22e6f4f5ac'}
+    response = requests.get(url, headers=headers)
     if response.status_code == 200:
         data = response.json()["data"]
         mmr_current = data["elo"] -2100
@@ -38,7 +39,8 @@ def fetch_and_parse_mmr():
         print(f"Error fetching data. Status code: {response.status_code}")
 
 def fetch_radiant_mmr():
-    response = requests.get('https://api.henrikdev.xyz/valorant/v2/leaderboard/ap')
+    headers = {'Authorization': 'HDEV-2f464838-0399-4bfd-9c01-1b22e6f4f5ac'}
+    response = requests.get('https://api.henrikdev.xyz/valorant/v2/leaderboard/ap', headers=headers)
     data = response.json()
     radiantMMR = data['players'][499]['rankedRating'] if len(data['players']) > 499 else None
     print(f"Radiant MMR: {radiantMMR}")
