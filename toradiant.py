@@ -30,21 +30,26 @@ def fetch_and_parse_mmr():
     global mmr_current
     url = f"https://api.henrikdev.xyz/valorant/v1/by-puuid/mmr/{region}/{puuid}"
     headers = {'Authorization': 'HDEV-2f464838-0399-4bfd-9c01-1b22e6f4f5ac'}
-    response = requests.get(url, headers=headers)
-    if response.status_code == 200:
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status() 
         data = response.json()["data"]
         mmr_current = data["elo"] -2100
         print(f"MMR Current: {mmr_current}")
-    else:
-        print(f"Error fetching data. Status code: {response.status_code}")
+    except (requests.HTTPError, KeyError, ValueError):
+        print("Error fetching or parsing data.")
 
 def fetch_radiant_mmr():
     headers = {'Authorization': 'HDEV-2f464838-0399-4bfd-9c01-1b22e6f4f5ac'}
-    response = requests.get('https://api.henrikdev.xyz/valorant/v2/leaderboard/ap', headers=headers)
-    data = response.json()
-    radiantMMR = data['players'][499]['rankedRating'] if len(data['players']) > 499 else None
-    print(f"Radiant MMR: {radiantMMR}")
-    return radiantMMR
+    try:
+        response = requests.get('https://api.henrikdev.xyz/valorant/v2/leaderboard/ap', headers=headers)
+        response.raise_for_status()
+        data = response.json()
+        radiantMMR = data['players'][499]['rankedRating'] if len(data['players']) > 499 else None
+        print(f"Radiant MMR: {radiantMMR}")
+        return radiantMMR
+    except (requests.HTTPError, KeyError, ValueError):
+        print("Error fetching or parsing data.")
 
 def calculate_rr_required():
     radiantMMR = fetch_radiant_mmr()
