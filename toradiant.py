@@ -36,7 +36,7 @@ def fetch_and_parse_mmr():
         data = response.json()["data"]
         mmr_current = data["elo"] -2100
         print(f"MMR Current: {mmr_current}")
-    except (requests.HTTPError, KeyError, ValueError):
+    except (requests.HTTPError, KeyError, ValueError, requests.exceptions.ConnectionError):
         print("Error fetching or parsing data.")
 
 def fetch_radiant_mmr():
@@ -48,7 +48,7 @@ def fetch_radiant_mmr():
         radiantMMR = data['players'][499]['rankedRating'] if len(data['players']) > 499 else None
         print(f"Radiant MMR: {radiantMMR}")
         return radiantMMR
-    except (requests.HTTPError, KeyError, ValueError):
+    except (requests.HTTPError, KeyError, ValueError, requests.exceptions.ConnectionError):
         print("Error fetching or parsing data.")
 
 def calculate_rr_required():
